@@ -24,15 +24,17 @@ io.on('connection', (client) => {
         users.addUser(client.id , data.name, data.room);
 
         client.broadcast.to(data.room).emit('listUsers', users.getUsersByRoom(data.room));
+        client.broadcast.to(data.room).emit('createMessage', createMessage('Admin',`${data.name} has entered the chat`));
 
         callback(users.getUsersByRoom(data.room));
     }); 
 
 
-    client.on('createMessage', (data) => {
+    client.on('createMessage', (data, callback) => {
         let user = users.getUser(client.id);
         let message = createMessage(user.name, data.message);
-        client.broadcast.to(user.room).emit('createMessage', message); //Send a message to everyone
+        client.broadcast.to(user.room).emit('createMessage', message); //Send a message to everyone        
+        callback(message);
     });
     
 

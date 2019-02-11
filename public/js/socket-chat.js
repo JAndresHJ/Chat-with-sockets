@@ -21,6 +21,7 @@ socket.on('connect', function() {
     console.log('Connected to server');
     socket.emit('enterChat', user, function( res ){
         console.log('Users connected', res);
+        renderUsers(res); // res is a users array
     });
 });
 
@@ -34,12 +35,15 @@ socket.on('disconnect', function() {
 // listen createMessage from server
 socket.on('createMessage', function(message) {
     console.log('Server:', message);
+    renderMessages(message, false);
+    scrollBottom();
 });
 
 
 // listen listUsers event from server
 socket.on('listUsers', function(users){
     console.log("List of users connected", users);
+    renderUsers(users);
 })
 
 
